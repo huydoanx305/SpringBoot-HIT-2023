@@ -1,2 +1,0 @@
-INDEX VERSION 1.4+C:\Users\ADMIN\OneDrive\Máy tính\SpringBoot-HIT-2023\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
-3435648363.index
