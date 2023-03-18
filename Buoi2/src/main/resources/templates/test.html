@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div>Lấy object từ controller truyền xuống</div>
+<div th:object="${student}">
+    <div th:text="*{msv}"></div>
+    <div th:text="*{name}"></div>
+    <div th:text="*{age}"></div>
+</div>
+
+</body>
+</html>
