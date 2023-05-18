@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new UserDetailServiceImp();
     }
 
-    //Cấu hình authentication xử lý quá trình authentication
+    //Cấu hình AuthenticationManager xử lý quá trình authentication
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder());
