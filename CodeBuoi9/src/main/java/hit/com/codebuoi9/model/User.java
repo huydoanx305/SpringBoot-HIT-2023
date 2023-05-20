@@ -24,7 +24,7 @@ public class User {
 
     private String password;
 
-    @ManyToOne()
-    @JoinColumn(name = "user_id")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "role_id")
     private Role role;
 }
