@@ -16,5 +16,6 @@ public class UserResponse {
     private int id;
     private String fullName;
     private String accessToken;
+    private String refreshToken;
     private Collection<? extends GrantedAuthority> authorities;
 }

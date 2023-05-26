@@ -18,6 +18,9 @@ public class JwtUtils {
     @Value("${jwt.expirationMs}")
     private Long expirationMs;
 
+    @Value("${jwt.due_refreshToken}")
+    private Long dueRefreshToken;
+
     public String generateTokenByUsername(String username) {
         return Jwts.builder()
                 .setSubject(username)
@@ -27,12 +30,29 @@ public class JwtUtils {
                 .compact();
     }
 
+    public String generateRefreshTokenByUsername(String username) {
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(new Date().getTime() + dueRefreshToken))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
+    }
+
+
     public String getUserByToken(String token) {
         return Jwts.parser()
                 .setSigningKey(secretKey)
                 .parseClaimsJws(token)
                 .getBody().getSubject();
     }
+    public String getUserByRefreshToken(String refreshToken) {
+        return Jwts.parser()
+                .setSigningKey(secretKey)
+                .parseClaimsJws(refreshToken)
+                .getBody().getSubject();
+    }
+
 
     public boolean validation(String auth) {
         try {

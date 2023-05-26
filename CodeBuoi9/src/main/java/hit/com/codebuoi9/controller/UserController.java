@@ -10,9 +10,12 @@ import hit.com.codebuoi9.repo.UserRepository;
 import hit.com.codebuoi9.request.LoginRequest;
 import hit.com.codebuoi9.response.UserResponse;
 import hit.com.codebuoi9.service.UserDetailImp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,6 +28,7 @@ import java.util.Optional;
 @RequestMapping("/api/v1")
 public class UserController {
 
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
     @Autowired
     AuthenticationManager authenticationManager;
     @Autowired
@@ -33,7 +37,6 @@ public class UserController {
     private RoleRepository roleRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
-
     @Autowired
     private JwtUtils jwtUtils;
 
@@ -41,20 +44,25 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
 
-
-        Authentication authentication =
-                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
-                        loginRequest.getPassword()));
-
+        Authentication authentication = null;
+        try {
+            authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
+                            loginRequest.getPassword()));
+        } catch (BadCredentialsException e) {
+            log.error(e.getMessage());
+        }
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         UserDetailImp userDetailImp = (UserDetailImp) authentication.getPrincipal();
+
         try {
             String accessToken = jwtUtils.generateTokenByUsername(userDetailImp.getUsername());
+            String refreshToken = jwtUtils.generateRefreshTokenByUsername(userDetailImp.getUsername());
             return ResponseEntity.ok(new UserResponse(
                     userDetailImp.getId(),
                     userDetailImp.getFullName(),
                     accessToken,
+                    refreshToken,
                     userDetailImp.getAuthorities()
             ));
         } catch (Exception e) {

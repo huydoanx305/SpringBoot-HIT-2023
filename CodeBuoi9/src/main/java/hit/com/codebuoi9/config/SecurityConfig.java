@@ -72,7 +72,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     //tạo 1 đối tượng UserDetailService và quản lý nó trong SpringContext
-
     //Cấu hình AuthenticationManager xử lý quá trình authentication
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
